@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CustomerManagementService.Persistence\CustomerManagementService.Persistence.csproj" />
+    <ProjectReference Include="..\CustomerManagementService.ServiceContracts\CustomerManagementService.ServiceContracts.csproj" />
+  </ItemGroup>
+
+</Project>
