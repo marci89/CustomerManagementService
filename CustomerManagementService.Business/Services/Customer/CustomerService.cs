@@ -69,19 +69,42 @@ namespace CustomerManagementService.Business
 		{
 			try
 			{
+				//Check identifier emppty
+				if(string.IsNullOrEmpty(request.Identifier))
+				{
+					return await Task.FromResult(new CreateCustomerResponse
+					{
+						ErrorMessage = "Identifier is required",
+						Result = new Customer()
+					});
+				}
 
-                if (_dbContext.Customers.Count(x => x.Identifier == request.Identifier) > 0)
+				//Check category requirement
+				if (request.Category == CustomerCategory.Residential)
+				{
+					if (string.IsNullOrEmpty(request.FirstName) || string.IsNullOrEmpty(request.LastName))
+					{
+						return await Task.FromResult(new CreateCustomerResponse
+						{
+							ErrorMessage = "First name and last name are required if you choose residential type",
+							Result = new Customer()
+						});
+					}
+				}
+
+				// check identifier exists
+				if (_dbContext.Customers.Count(x => x.Identifier == request.Identifier) > 0)
 				{
 					return await Task.FromResult(new CreateCustomerResponse
 					{
 						ErrorMessage = "Identifier has already exists",
 						Result = new Customer()
-
-
 					});
                 }
 
-                    var entity = _factory.Create(request);
+                var entity = _factory.Create(request);
+
+				
 
 				_dbContext.Customers.Add(entity);
 				await _dbContext.SaveChangesAsync();
@@ -109,6 +132,29 @@ namespace CustomerManagementService.Business
 
 			try
 			{
+				//Check identifier emppty
+				if (string.IsNullOrEmpty(request.Identifier))
+				{
+					return await Task.FromResult(new UpdateCustomerResponse
+					{
+						ErrorMessage = "Identifier is required",
+						Result = new Customer()
+					});
+				}
+
+				//Check category requirement
+				if (request.Category == CustomerCategory.Residential)
+				{
+					if (string.IsNullOrEmpty(request.FirstName) || string.IsNullOrEmpty(request.LastName))
+					{
+						return await Task.FromResult(new UpdateCustomerResponse
+						{
+							ErrorMessage = "First name and last name are required if you choose residential type",
+							Result = new Customer()
+						});
+					}
+				}
+
 				var entity = await _dbContext.Customers.FindAsync(request.Id);
 				if (entity is null)
 				{
@@ -140,7 +186,7 @@ namespace CustomerManagementService.Business
 				return await Task.FromResult(new UpdateCustomerResponse
 				{
 					Result = _factory.Create(entity)
-				}); ;
+				});
 
 			}
 			catch (Exception ex)
